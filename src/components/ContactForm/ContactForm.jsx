@@ -1,19 +1,20 @@
 import { Formik } from 'formik';
-import { Form, Field, Button, ErrorMessage } from './ContactForm.styled';
+import { Form, Field, ErrorMessage } from './ContactForm.styled';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/operations';
-import { getContacts } from '../../redux/selectors';
-//redux/selectors
+import { addContact } from 'redux/contacts/operations';
+import { getContacts } from 'redux/contacts/selectors';
+import Button from '@mui/material/Button';
+
 const contactsFormSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required field'),
-  phone: Yup.string()
+  number: Yup.string()
     .matches(
-      /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
-      'Please, enter only digits in format of "123-123-1234"'
+      /^[0-9]{3}-[0-9]{2}-[0-9]{2}$/,
+      'Please, enter only digits in format of "123-12-12"'
     )
     .required('Required field'),
 });
@@ -26,7 +27,7 @@ export const ContactForm = () => {
     <Formik
       initialValues={{
         name: '',
-        phone: '',
+        number: '',
       }}
       validationSchema={contactsFormSchema}
       onSubmit={(values, actions) => {
@@ -41,7 +42,7 @@ export const ContactForm = () => {
         dispatch(
           addContact({
             name: values.name,
-            phone: values.phone,
+            number: values.number,
           })
         );
 
@@ -53,11 +54,13 @@ export const ContactForm = () => {
         <Field id="name" name="name" />
         <ErrorMessage name="name" component={'span'}></ErrorMessage>
 
-        <label htmlFor="phone">Number</label>
-        <Field id="phone" name="phone" type="tel" />
-        <ErrorMessage name="phone" component={'span'}></ErrorMessage>
+        <label htmlFor="number">Number</label>
+        <Field id="number" name="number" type="tel" />
+        <ErrorMessage name="number" component={'span'}></ErrorMessage>
 
-        <Button type="submit">Add contact</Button>
+        <Button variant="contained" type="submit">
+          Add contact
+        </Button>
       </Form>
     </Formik>
   );

@@ -1,33 +1,67 @@
-import React, { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppLayout } from './App.styled';
-import { ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactList/ContactList';
-import { fetchContacts } from '../redux/operations';
-import { getContacts, getError, getIsLoading } from '../redux/selectors';
+import { useEffect, lazy } from 'react';
+import { getCurrentUser } from 'redux/auth/operations';
+import { Layout } from './Layout';
+import { useAuth } from 'hooks';
+import { PrivateRoute } from './PrivateRoute';
+import { RestrictedRoute } from './RestrictedRoute';
+import { getIsLoading } from 'redux/contacts/selectors';
+import LinearProgress from '@mui/material-next/LinearProgress';
+
+const HomePage = lazy(() => import('../pages/Home/Home'));
+const RegisterPage = lazy(() => import('../pages/Register'));
+const LoginPage = lazy(() => import('../pages/Login'));
+const ContactsPage = lazy(() => import('../pages/Contacts/Contacts'));
 
 export const App = () => {
   const dispatch = useDispatch();
+  const { isRefreshing } = useAuth();
+  const isLoading = useSelector(getIsLoading);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(getCurrentUser());
   }, [dispatch]);
 
-  const { isLoading, error, contacts } = useSelector((state) => ({
-    isLoading: getIsLoading(state),
-    error: getError(state),
-    contacts: getContacts(state),
-  }));
-
   return (
-    <AppLayout>
-      <h1 className="app-title">Phonebook</h1>
-      <ContactForm />
-      <div className="contact-section">
-        {!error && contacts.length > 0 && <ContactList />}
-        {isLoading && !error && <p className="loading-message">Loading contacts...</p>}
-        {error && <p className="error-message">{error}</p>}
-      </div>
-    </AppLayout>
+    <>
+      {isRefreshing ? (
+        <LinearProgress color="primary" variant="indeterminate" />
+      ) : (
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route
+              path="/register"
+              element={
+                <RestrictedRoute
+                  redirectTo="/contacts"
+                  component={<RegisterPage />}
+                />
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <RestrictedRoute
+                  redirectTo="/contacts"
+                  component={<LoginPage />}
+                />
+              }
+            />
+            <Route
+              path="/contacts"
+              element={
+                <PrivateRoute
+                  redirectTo="/login"
+                  component={<ContactsPage />}
+                />
+              }
+            />
+          </Route>
+        </Routes>
+      )}
+      {isLoading && <LinearProgress color="primary" variant="indeterminate" />}
+    </>
   );
 };
