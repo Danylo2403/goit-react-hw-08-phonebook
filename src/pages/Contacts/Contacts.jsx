@@ -3,11 +3,11 @@ import { ContactList } from 'components/ContactList/ContactList';
 import { Filter } from 'components/Filter/Filter';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts } from 'redux/contacts/operations';
-import { getContacts, getError, getIsLoading } from 'redux/contacts/selectors';
+import { fetchContacts } from '../../redux/contacts/operations';
+import { getContacts, getError, getIsLoading } from '../../redux/contacts/selectors';
 import { Title, Wrapper } from './Contacts.styled';
 import LinearProgress from '@mui/material-next/LinearProgress';
-
+//redux/contacts/operations
 export default function Contacts() {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);

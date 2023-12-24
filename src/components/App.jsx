@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, lazy } from 'react';
-import { getCurrentUser } from 'redux/auth/operations';
+import { getCurrentUser } from '../redux/auth/operations';
 import { Layout } from './Layout';
 import { useAuth } from 'hooks';
 import { PrivateRoute } from './PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute';
-import { getIsLoading } from 'redux/contacts/selectors';
+import { getIsLoading } from '../redux/contacts/selectors';
 import LinearProgress from '@mui/material-next/LinearProgress';
-
+//redux/contacts/selectors redux/auth/operations
 const HomePage = lazy(() => import('../pages/Home/Home'));
 const RegisterPage = lazy(() => import('../pages/Register'));
 const LoginPage = lazy(() => import('../pages/Login'));
