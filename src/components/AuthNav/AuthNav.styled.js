@@ -9,7 +9,7 @@ export const NavWrapper = styled.div`
 
 export const StyledNavLink = styled(NavLink)`
   text-decoration: none;
-  color: #fff; /* Белый текст */
+  color: #fff; 
   border-radius: 8px;
   padding: 8px 12px;
   background: rgba(41, 128, 185, 0.8); /* Светло-синий фон */
